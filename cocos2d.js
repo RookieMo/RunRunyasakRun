@@ -18,7 +18,7 @@
             'src/BackgroundLayer.js',
             'src/PlayScene.js',
             'src/StatusLayer.js',
-            'src/globals.js'
+            'src/globals.js',
         ]
     };
 

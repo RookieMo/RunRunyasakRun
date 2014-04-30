@@ -1,38 +1,37 @@
-
-
 var AnimationLayer = cc.Layer.extend({
-    spriteSheet:null,
-    runningAction:null,
-    sprite:null,
 
     ctor:function () {
         this._super();
-        this.init();
+        this.gravity = 5;
+        this.v = 0;
+        this.isAlive = true;
+        this.started = false;
+        this.setAnchorPoint( cc.p( 0.5, 0 ) );
+        
+        
+        this.movingAction = this.init();
+
+        this.player = cc.Sprite.create(s_runner0);
+        this.player.setPosition(cc.p(80, 160));
+        this.player.runAction(this.runningAction);
+        this.addChild( this.player );
+        this.player.scheduleUpdate();
     },
     init:function () {
         this._super();
         
-        cc.SpriteFrameCache.getInstance().addSpriteFrames(s_runnerplist);
-        this.spriteSheet = cc.SpriteBatchNode.create(s_runner);
-        this.addChild(this.spriteSheet);
-
-        
-        var animFrames = [];
-        for (var i = 0; i < 8; i++) {
-            var str = "runner" + i + ".png";
-            var frame = cc.SpriteFrameCache.getInstance().getSpriteFrame(str);
-            animFrames.push(frame);
-        }
-
-        var animation = cc.Animation.create(animFrames, 0.1);
-        this.runningAction = cc.RepeatForever.create(cc.Animate.create(animation));
-        
-
-        this.sprite = cc.Sprite.createWithSpriteFrameName("runner0.png");
-        this.sprite.setPosition(cc.p(80, 160));
-        this.sprite.runAction(this.runningAction);
-        this.spriteSheet.addChild(this.sprite);
-
-        this.scheduleUpdate();
+        var animation = new cc.Animation.create();
+        animation.addSpriteFrameWithFile( s_runner0 );
+        animation.addSpriteFrameWithFile( s_runner1 );
+        animation.addSpriteFrameWithFile( s_runner2 );
+        animation.addSpriteFrameWithFile( s_runner3 );
+        animation.addSpriteFrameWithFile( s_runner4 );
+        animation.addSpriteFrameWithFile( s_runner5 );
+        animation.addSpriteFrameWithFile( s_runner6 );
+        animation.addSpriteFrameWithFile( s_runner7 );
+        console.log( animation.getDelayPerUnit() );
+        animation.setDelayPerUnit( 0.1 );
+        this.runningAction = cc.RepeatForever.create( cc.Animate.create( animation ));
     },
+
 });

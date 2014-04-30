@@ -30,19 +30,19 @@ var BackgroundLayer = cc.Layer.extend({
         if(pos1.x!=-400){
           this.bg1.setPosition(new cc.p(pos1.x-2,300));}
         else{
-          this.bg1.setPosition(new cc.p(2000,300));
+          this.bg1.setPosition(new cc.p(1998,300));
         }
         var pos2 = this.bg2.getPosition();
         if(pos2.x!=-400){
           this.bg2.setPosition(new cc.p(pos2.x-2,300));}
         else{
-          this.bg2.setPosition(new cc.p(2000,300));
+          this.bg2.setPosition(new cc.p(1998,300));
         }
         var pos3 = this.bg3.getPosition();
         if(pos3.x!=-400){
           this.bg3.setPosition(new cc.p(pos3.x-2,300));}
         else{
-          this.bg3.setPosition(new cc.p(2000,300));
+          this.bg3.setPosition(new cc.p(1998,300));
         }
     }
 });
