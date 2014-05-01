@@ -2,22 +2,29 @@ var AnimationLayer = cc.Layer.extend({
 
     ctor:function () {
         this._super();
-        this.gravity = 5;
-        this.v = 0;
-        this.isAlive = true;
-        this.started = false;
         this.setAnchorPoint( cc.p( 0.5, 0 ) );
-        
-        
-        this.movingAction = this.init();
+        this.x = 80;
+        this.y = 160;
+
+        this.jumpV = 20;
+        this.g = -1;
+        this.vy = 0;
+        this.jump = false;
+        this.ground = null;
+        this.animate();
 
         this.player = cc.Sprite.create(s_runner0);
-        this.player.setPosition(cc.p(80, 160));
         this.player.runAction(this.runningAction);
+
+        this.setKeyboardEnabled( true );
+        this.updatePosition();
         this.addChild( this.player );
-        this.player.scheduleUpdate();
+
+        
+        this.scheduleUpdate();
+        
     },
-    init:function () {
+    animate:function () {
         this._super();
         
         var animation = new cc.Animation.create();
@@ -33,5 +40,71 @@ var AnimationLayer = cc.Layer.extend({
         animation.setDelayPerUnit( 0.1 );
         this.runningAction = cc.RepeatForever.create( cc.Animate.create( animation ));
     },
+    updatePosition: function() {
+        this.player.setPosition( cc.p( Math.round( this.x ),
+                                Math.round( this.y ) ) );
+    },
+    getPlayerRect: function() {
+        var spriteRect = this.player.getBoundingBoxToWorld();
+        var spritePos = this.player.getPosition();
 
+        var dX = this.x - spritePos.x;
+        var dY = this.y - spritePos.y;
+        return cc.rect( spriteRect.x + dX,
+                        spriteRect.y + dY,
+                        spriteRect.width,
+                        spriteRect.height );
+    },
+    update:function(){
+        var currentPositionRect = this.getPlayerRect();
+
+        this.updateY();
+
+        var newPositionRect = this.getPlayerRect();
+        this.handleCollision( currentPositionRect,
+                              newPositionRect );
+
+        this.updatePosition();
+    },
+    updateY:function(){
+        if( this.ground ){
+            this.vy = 0;
+            if(this.jump){
+                this.player.stopAllActions();
+                this.vy = this.jumpV;
+                this.y = 160 + this.vy;
+                this.ground = null;
+            } else{
+                this.player.runAction(this.runningAction);
+            }
+
+        } else{
+            this.player.stopAllActions();
+            this.vy += this.g;
+            this.y += this.vy;
+        }
+    },
+    handleCollision: function( oldRect, newRect ) {
+        if ( this.ground ) {
+            
+        } else {
+            if ( this.vy <= 0 ) {
+                this.ground = true;
+                this.y = 160;
+                this.vy = 0;
+            }
+        }
+    },
+    onKeyDown: function( e ) {
+        if ( e == cc.KEY.up ) {
+            this.jump = true;
+            console.log('jump');
+        }
+    },
+
+    onKeyUp: function( e ) {
+        if ( e == cc.KEY.up ) {
+            this.jump = false;
+        }
+    },
 });

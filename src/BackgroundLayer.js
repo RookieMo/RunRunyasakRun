@@ -19,7 +19,7 @@ var BackgroundLayer = cc.Layer.extend({
       this.bg3 = cc.Sprite.create(s_PlayBG);
       this.bg3.setPosition(cc.p(2000 , 300));
       
-
+      this.meter = 0;
       this.addChild(this.bg1);
       this.addChild(this.bg2);
       this.addChild(this.bg3);
@@ -28,9 +28,11 @@ var BackgroundLayer = cc.Layer.extend({
     update:function () {
         var pos1 = this.bg1.getPosition();
         if(pos1.x!=-400){
-          this.bg1.setPosition(new cc.p(pos1.x-2,300));}
+          this.bg1.setPosition(new cc.p(pos1.x-2,300));
+          this.meter++;}
         else{
           this.bg1.setPosition(new cc.p(1998,300));
+          this.meter++;
         }
         var pos2 = this.bg2.getPosition();
         if(pos2.x!=-400){
@@ -44,5 +46,8 @@ var BackgroundLayer = cc.Layer.extend({
         else{
           this.bg3.setPosition(new cc.p(1998,300));
         }
+
+        var statusLayer = this.getParent().getChildByTag(TagOfLayer.Status);
+        statusLayer.updateMeter(this.meter);
     }
 });
