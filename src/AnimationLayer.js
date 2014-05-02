@@ -11,16 +11,17 @@ var AnimationLayer = cc.Layer.extend({
         this.vy = 0;
         this.jump = false;
         this.ground = null;
+        this.blocks = [];
         this.animate();
-
+        this.createBlocks();
         this.player = cc.Sprite.create(s_runner0);
         this.player.runAction(this.runningAction);
 
         this.setKeyboardEnabled( true );
         this.updatePosition();
+        this.setBlocks( this.blocks );
         this.addChild( this.player );
 
-        
         this.scheduleUpdate();
         
     },
@@ -59,6 +60,8 @@ var AnimationLayer = cc.Layer.extend({
         var currentPositionRect = this.getPlayerRect();
 
         this.updateY();
+        
+        this.updateBlock();
 
         var newPositionRect = this.getPlayerRect();
         this.handleCollision( currentPositionRect,
@@ -70,30 +73,52 @@ var AnimationLayer = cc.Layer.extend({
         if( this.ground ){
             this.vy = 0;
             if(this.jump){
-                this.player.stopAllActions();
+                //this.player.stopAllActions();
                 this.vy = this.jumpV;
-                this.y = 160 + this.vy;
+                this.y = this.ground.getTopY() + this.vy;
                 this.ground = null;
             } else{
-                this.player.runAction(this.runningAction);
+                //this.player.runAction(this.runningAction);
             }
 
         } else{
-            this.player.stopAllActions();
+            //this.player.stopAllActions();
             this.vy += this.g;
             this.y += this.vy;
         }
     },
     handleCollision: function( oldRect, newRect ) {
         if ( this.ground ) {
-            
+            if ( !this.ground.onTop( newRect ) ) {
+                this.ground = null;
+            }
         } else {
             if ( this.vy <= 0 ) {
-                this.ground = true;
-                this.y = 160;
-                this.vy = 0;
+                var topBlock = this.findTopBlock( this.blocks,
+                                                  oldRect,
+                                                  newRect );
+                if ( topBlock ) {
+                    this.ground = topBlock;
+                    this.y = topBlock.getTopY();
+                    this.vy = 0;
+                }
             }
         }
+    },
+    findTopBlock: function( blocks, oldRect, newRect ) {
+        var topBlock = null;
+        var topBlockY = -1;
+        
+        blocks.forEach( function( b ) {
+            if ( b.hitTop( oldRect, newRect ) ) {
+                if ( b.getTopY() > topBlockY ) {
+                    topBlockY = b.getTopY();
+                    topBlock = b;
+                }
+            }
+        }, this );
+        
+        return topBlock;
     },
     onKeyDown: function( e ) {
         if ( e == cc.KEY.up ) {
@@ -107,4 +132,30 @@ var AnimationLayer = cc.Layer.extend({
             this.jump = false;
         }
     },
+    setBlocks: function( blocks ) {
+        this.blocks = blocks;
+    },
+    createBlocks: function() {
+        this.blocks = [];
+        this.groundBlock = new Block( 0, 80, 500, 130 );
+        this.blocks.push( this.groundBlock );
+
+        this.middleBlock = new Block( 0, 200, 400, 250 );
+        this.blocks.push( this.middleBlock );
+
+        this.topBlock = new Block( 600, 400, 800, 450 );
+        this.blocks.push( this.topBlock );
+
+        this.blocks.forEach( function( b ) {
+            this.addChild( b );
+        }, this );
+    },
+    updateBlock:function(){
+        var pos1 = this.groundBlock.getPosition();
+        this.groundBlock.setPosition(new cc.p(pos1.x-2,pos1.y));
+        var pos2 = this.middleBlock.getPosition();
+        this.middleBlock.setPosition(new cc.p(pos2.x-2,pos2.y));
+        var pos3 = this.topBlock.getPosition();
+        this.topBlock.setPosition(new cc.p(pos3.x-2,pos3.y));
+    }
 });

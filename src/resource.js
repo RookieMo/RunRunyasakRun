@@ -10,6 +10,7 @@ var s_runner4 = "runner4.png";
 var s_runner5 = "runner5.png";
 var s_runner6 = "runner6.png";
 var s_runner7 = "runner7.png";
+var s_block = "ground.png";
 
 var g_resources = [
     //image
@@ -25,5 +26,5 @@ var g_resources = [
     {src:s_runner5},
     {src:s_runner6},
     {src:s_runner7},
-
+    {src:s_block},
 ];
