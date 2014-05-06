@@ -3,7 +3,7 @@ var Block = cc.Sprite.extend({
         this._super();
         this.initWithFile( s_block,
                            cc.rect( 0, 0, x2-x1, y2 - y1 ) );
-        this.setAnchorPoint( cc.p( 0, 0 ) );
+        this.setAnchorPoint( cc.p( 0, 0.5 ) );
         this.setPosition( cc.p( x1, y1 ) );
     },
 

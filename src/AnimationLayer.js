@@ -2,7 +2,6 @@ var AnimationLayer = cc.Layer.extend({
 
     ctor:function () {
         this._super();
-        this.setAnchorPoint( cc.p( 0.5, 0 ) );
         this.x = 80;
         this.y = 160;
 
@@ -10,11 +9,13 @@ var AnimationLayer = cc.Layer.extend({
         this.g = -1;
         this.vy = 0;
         this.jump = false;
+        this.isRunning = true;
         this.ground = null;
         this.blocks = [];
-        this.animate();
+        this.runningAction = this.animate();
         this.createBlocks();
         this.player = cc.Sprite.create(s_runner0);
+        this.player.setAnchorPoint(cc.p(0.5,0));
         this.player.runAction(this.runningAction);
 
         this.setKeyboardEnabled( true );
@@ -39,7 +40,7 @@ var AnimationLayer = cc.Layer.extend({
         animation.addSpriteFrameWithFile( s_runner7 );
         console.log( animation.getDelayPerUnit() );
         animation.setDelayPerUnit( 0.1 );
-        this.runningAction = cc.RepeatForever.create( cc.Animate.create( animation ));
+        return cc.RepeatForever.create( cc.Animate.create( animation ));
     },
     updatePosition: function() {
         this.player.setPosition( cc.p( Math.round( this.x ),
@@ -66,25 +67,30 @@ var AnimationLayer = cc.Layer.extend({
         var newPositionRect = this.getPlayerRect();
         this.handleCollision( currentPositionRect,
                               newPositionRect );
-
         this.updatePosition();
     },
     updateY:function(){
         if( this.ground ){
             this.vy = 0;
             if(this.jump){
-                //this.player.stopAllActions();
+                this.player.stopAllActions();
                 this.vy = this.jumpV;
                 this.y = this.ground.getTopY() + this.vy;
                 this.ground = null;
-            } else{
-                //this.player.runAction(this.runningAction);
+                this.isRunning = true;
+            } else if(this.isRunning == true){    
+                this.player.runAction(this.runningAction);
+                this.isRunning = false;
             }
 
         } else{
-            //this.player.stopAllActions();
+            this.player.stopAllActions();
             this.vy += this.g;
             this.y += this.vy;
+            if(this.y<0){
+                cc.Director.getInstance().pause();
+                this.addChild(new GameOverLayer());
+            }
         }
     },
     handleCollision: function( oldRect, newRect ) {
@@ -101,6 +107,7 @@ var AnimationLayer = cc.Layer.extend({
                     this.ground = topBlock;
                     this.y = topBlock.getTopY();
                     this.vy = 0;
+                    this.isRunning = true;
                 }
             }
         }
@@ -137,13 +144,14 @@ var AnimationLayer = cc.Layer.extend({
     },
     createBlocks: function() {
         this.blocks = [];
-        this.groundBlock = new Block( 0, 80, 500, 130 );
+
+        this.groundBlock = new Block( 0, 110, 600, 160 );
         this.blocks.push( this.groundBlock );
 
-        this.middleBlock = new Block( 0, 200, 400, 250 );
+        this.middleBlock = new Block( 400, 230, 1000, 280 );
         this.blocks.push( this.middleBlock );
 
-        this.topBlock = new Block( 600, 400, 800, 450 );
+        this.topBlock = new Block( 800, 110, 1400, 160 );
         this.blocks.push( this.topBlock );
 
         this.blocks.forEach( function( b ) {
@@ -157,5 +165,5 @@ var AnimationLayer = cc.Layer.extend({
         this.middleBlock.setPosition(new cc.p(pos2.x-2,pos2.y));
         var pos3 = this.topBlock.getPosition();
         this.topBlock.setPosition(new cc.p(pos3.x-2,pos3.y));
-    }
+    },
 });

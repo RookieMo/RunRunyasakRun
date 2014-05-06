@@ -19,7 +19,8 @@
             'src/PlayScene.js',
             'src/StatusLayer.js',
             'src/globals.js',
-            'src/Block.js'
+            'src/Block.js',
+            'src/GameOverLayer.js',
         ]
     };
 
