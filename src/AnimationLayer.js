@@ -11,6 +11,7 @@ var AnimationLayer = cc.Layer.extend({
         this.jump = false;
         this.isRunning = true;
         this.ground = null;
+        this.isDead = false;
         this.blocks = [];
         this.runningAction = this.animate();
         this.createBlocks();
@@ -71,6 +72,7 @@ var AnimationLayer = cc.Layer.extend({
     },
     updateY:function(){
         if( this.ground ){
+            this.isDead = false;
             this.vy = 0;
             if(this.jump){
                 this.player.stopAllActions();
@@ -87,9 +89,8 @@ var AnimationLayer = cc.Layer.extend({
             this.player.stopAllActions();
             this.vy += this.g;
             this.y += this.vy;
-            if(this.y<0){
-                cc.Director.getInstance().pause();
-                this.addChild(new GameOverLayer());
+            if(this.y <= 0){
+                this.isDead = true;
             }
         }
     },
@@ -145,7 +146,7 @@ var AnimationLayer = cc.Layer.extend({
     createBlocks: function() {
         this.blocks = [];
 
-        this.groundBlock = new Block( 0, 110, 600, 160 );
+        this.groundBlock = new Block( 0, 110, 300, 160 );
         this.blocks.push( this.groundBlock );
 
         this.middleBlock = new Block( 400, 230, 1000, 280 );
