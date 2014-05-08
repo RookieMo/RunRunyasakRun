@@ -13,6 +13,7 @@ var s_runner7 = "runner7.png";
 var s_block = "ground.png";
 var s_restart_n = "restart_n.png";
 var s_restart_s = "restart_s.png";
+var s_rock = "rock.png";
 
 var g_resources = [
     //image
@@ -31,4 +32,5 @@ var g_resources = [
     {src:s_block},
     {src:s_restart_n},
     {src:s_restart_s},
+    {src:s_rock},
 ];

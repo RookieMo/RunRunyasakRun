@@ -7,7 +7,6 @@ var GameOverLayer = cc.LayerColor.extend({
     init:function () {
         this._super(cc.c4b(0, 0, 0, 180));
         var winSize = cc.Director.getInstance().getWinSize();
-
         var centerPos = cc.p(winSize.width / 2, winSize.height / 2);
         cc.MenuItemFont.setFontSize(30);
         var menuItemRestart = cc.MenuItemSprite.create(
@@ -19,9 +18,6 @@ var GameOverLayer = cc.LayerColor.extend({
         this.addChild(menu);
     },
     onRestart:function (sender) {
-        //cc.Director.getInstance().resumeSchedulerAndActions();
-        //location.reload();
         cc.Director.getInstance().replaceScene(new PlayScene());
-
     }
 });

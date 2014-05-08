@@ -13,8 +13,10 @@ var AnimationLayer = cc.Layer.extend({
         this.ground = null;
         this.isDead = false;
         this.blocks = [];
+        this.rocks = [];
         this.runningAction = this.animate();
         this.createBlocks();
+        this.createRocks();
         this.player = cc.Sprite.create(s_runner0);
         this.player.setAnchorPoint(cc.p(0.5,0));
         this.player.runAction(this.runningAction);
@@ -64,6 +66,9 @@ var AnimationLayer = cc.Layer.extend({
         this.updateY();
         
         this.updateBlock();
+        this.updateRock();
+
+        this.collisionRock(this.rocks , currentPositionRect);
 
         var newPositionRect = this.getPlayerRect();
         this.handleCollision( currentPositionRect,
@@ -72,7 +77,7 @@ var AnimationLayer = cc.Layer.extend({
     },
     updateY:function(){
         if( this.ground ){
-            this.isDead = false;
+            
             this.vy = 0;
             if(this.jump){
                 this.player.stopAllActions();
@@ -146,25 +151,61 @@ var AnimationLayer = cc.Layer.extend({
     createBlocks: function() {
         this.blocks = [];
 
-        this.groundBlock = new Block( 0, 110, 300, 160 );
-        this.blocks.push( this.groundBlock );
+        this.block1 = new Block( 0, 110, 300, 160 );
+        this.blocks.push( this.block1 );
 
-        this.middleBlock = new Block( 400, 230, 1000, 280 );
-        this.blocks.push( this.middleBlock );
+        this.block2 = new Block( 400, 230, 1000, 280 );
+        this.blocks.push( this.block2 );
 
-        this.topBlock = new Block( 800, 110, 1400, 160 );
-        this.blocks.push( this.topBlock );
+        this.block3 = new Block( 800, 110, 1400, 160 );
+        this.blocks.push( this.block3 );
+
+        this.block4 = new Block( 2000, 240, 2600, 290 );
+        this.blocks.push( this.block4 );
 
         this.blocks.forEach( function( b ) {
             this.addChild( b );
         }, this );
     },
     updateBlock:function(){
-        var pos1 = this.groundBlock.getPosition();
-        this.groundBlock.setPosition(new cc.p(pos1.x-2,pos1.y));
-        var pos2 = this.middleBlock.getPosition();
-        this.middleBlock.setPosition(new cc.p(pos2.x-2,pos2.y));
-        var pos3 = this.topBlock.getPosition();
-        this.topBlock.setPosition(new cc.p(pos3.x-2,pos3.y));
+        var pos1 = this.block1.getPosition();
+        this.block1.setPosition(new cc.p(pos1.x-3,pos1.y));
+        var pos2 = this.block2.getPosition();
+        this.block2.setPosition(new cc.p(pos2.x-3,pos2.y));
+        var pos3 = this.block3.getPosition();
+        this.block3.setPosition(new cc.p(pos3.x-3,pos3.y));
+        var pos4 = this.block4.getPosition();
+        this.block4.setPosition(new cc.p(pos4.x-5,pos4.y));
+    },
+    createRocks:function(){
+        this.rocks = [];
+
+        this.rock1 = new Rock( 200, 155 );
+        this.rocks.push( this.rock1 );
+
+        this.rock2 = new Rock( 500, 275 );
+        this.rocks.push( this.rock2 );
+
+        this.rock3 = new Rock( 2200, 285 );
+        this.rocks.push( this.rock3 );
+
+        this.rocks.forEach( function( b ) {
+            this.addChild( b );
+        }, this );
+    },
+    updateRock:function(){
+        var pos1 = this.rock1.getPosition();
+        this.rock1.setPosition(new cc.p(pos1.x-3,pos1.y));
+        var pos2 = this.rock2.getPosition();
+        this.rock2.setPosition(new cc.p(pos2.x-3,pos2.y));
+        var pos3 = this.rock3.getPosition();
+        this.rock3.setPosition(new cc.p(pos3.x-5,pos3.y));
+    },
+    collisionRock:function(rocks , rect){
+        rocks.forEach( function( b ) {
+            if ( b.hitRock( rect ) ) {
+                this.isDead = true;
+            }
+        }, this );
     },
 });

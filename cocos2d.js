@@ -21,6 +21,7 @@
             'src/globals.js',
             'src/Block.js',
             'src/GameOverLayer.js',
+            'src/Rock.js',
         ]
     };
 

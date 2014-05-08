@@ -9,7 +9,7 @@ var PlayScene = cc.Scene.extend({
         this.addChild(this.statusLayer,0, TagOfLayer.Status);
         this.scheduleUpdate();
     },
-    collisionRockBegin:function () {
+    gameOver:function () {
         cc.log("==game over");
         this.bgLayer.unscheduleUpdate();
         this.statusLayer.unscheduleUpdate();
@@ -18,7 +18,7 @@ var PlayScene = cc.Scene.extend({
     },
     update:function(){
         if(this.animLayer.isDead){
-            this.collisionRockBegin();
+            this.gameOver();
             this.animLayer.isDead = false;
         }
     },

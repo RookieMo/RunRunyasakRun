@@ -18,11 +18,11 @@ var StatusLayer = cc.Layer.extend({
         this.labelCoin.setPosition(cc.p(70, winSize.height - 20));
         this.addChild(this.labelCoin);
 
-        this.labelMeter = cc.LabelTTF.create("0M", "Helvetica", 20);
+        this.labelMeter = cc.LabelTTF.create("0 M", "Helvetica", 20);
         this.labelMeter.setPosition(cc.p(winSize.width - 70, winSize.height - 20));
         this.addChild(this.labelMeter);
     },
     updateMeter:function (px) {
-        this.labelMeter.setString(parseInt(px / 10) + "M");
+        this.labelMeter.setString(parseInt(px / 10) + " M");
     }
 });
