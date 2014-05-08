@@ -14,6 +14,8 @@ var s_block = "ground.png";
 var s_restart_n = "restart_n.png";
 var s_restart_s = "restart_s.png";
 var s_rock = "rock.png";
+var s_music_background = "res/background.ogg";
+var s_music_jump = "res/jump.ogg";
 
 var g_resources = [
     //image
@@ -33,4 +35,6 @@ var g_resources = [
     {src:s_restart_n},
     {src:s_restart_s},
     {src:s_rock},
+    {src:s_music_background},
+    {src:s_music_jump},
 ];

@@ -32,4 +32,8 @@ var Block = cc.Sprite.extend({
         var maxx = cc.rectGetMaxX( rect );
         return ( minx <= bmaxx ) && ( bminx <= maxx );
     },
+    update:function(){
+        var pos = this.getPosition();
+        this.setPosition(new cc.p( pos.x-3 , pos.y ));
+    },
 });

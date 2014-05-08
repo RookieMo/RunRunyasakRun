@@ -41,7 +41,6 @@ var AnimationLayer = cc.Layer.extend({
         animation.addSpriteFrameWithFile( s_runner5 );
         animation.addSpriteFrameWithFile( s_runner6 );
         animation.addSpriteFrameWithFile( s_runner7 );
-        console.log( animation.getDelayPerUnit() );
         animation.setDelayPerUnit( 0.1 );
         return cc.RepeatForever.create( cc.Animate.create( animation ));
     },
@@ -65,8 +64,8 @@ var AnimationLayer = cc.Layer.extend({
 
         this.updateY();
         
-        this.updateBlock();
-        this.updateRock();
+        this.updateBlock(this.blocks);
+        this.updateRock(this.rocks);
 
         this.collisionRock(this.rocks , currentPositionRect);
 
@@ -134,14 +133,15 @@ var AnimationLayer = cc.Layer.extend({
         return topBlock;
     },
     onKeyDown: function( e ) {
-        if ( e == cc.KEY.up ) {
+        if ( e == cc.KEY.space ) {
             this.jump = true;
-            console.log('jump');
+            var audioEngine = cc.AudioEngine.getInstance();
+            audioEngine.playEffect(s_music_jump);
         }
     },
 
     onKeyUp: function( e ) {
-        if ( e == cc.KEY.up ) {
+        if ( e == cc.KEY.space ) {
             this.jump = false;
         }
     },
@@ -160,22 +160,17 @@ var AnimationLayer = cc.Layer.extend({
         this.block3 = new Block( 800, 110, 1400, 160 );
         this.blocks.push( this.block3 );
 
-        this.block4 = new Block( 2000, 240, 2600, 290 );
+        this.block4 = new Block( 1200, 240, 1800, 290 );
         this.blocks.push( this.block4 );
 
         this.blocks.forEach( function( b ) {
             this.addChild( b );
         }, this );
     },
-    updateBlock:function(){
-        var pos1 = this.block1.getPosition();
-        this.block1.setPosition(new cc.p(pos1.x-3,pos1.y));
-        var pos2 = this.block2.getPosition();
-        this.block2.setPosition(new cc.p(pos2.x-3,pos2.y));
-        var pos3 = this.block3.getPosition();
-        this.block3.setPosition(new cc.p(pos3.x-3,pos3.y));
-        var pos4 = this.block4.getPosition();
-        this.block4.setPosition(new cc.p(pos4.x-5,pos4.y));
+    updateBlock:function( blocks ){
+        blocks.forEach( function( b ) {
+            b.update();
+        }, this );
     },
     createRocks:function(){
         this.rocks = [];
@@ -186,20 +181,17 @@ var AnimationLayer = cc.Layer.extend({
         this.rock2 = new Rock( 500, 275 );
         this.rocks.push( this.rock2 );
 
-        this.rock3 = new Rock( 2200, 285 );
+        this.rock3 = new Rock( 1300, 285 );
         this.rocks.push( this.rock3 );
 
         this.rocks.forEach( function( b ) {
             this.addChild( b );
         }, this );
     },
-    updateRock:function(){
-        var pos1 = this.rock1.getPosition();
-        this.rock1.setPosition(new cc.p(pos1.x-3,pos1.y));
-        var pos2 = this.rock2.getPosition();
-        this.rock2.setPosition(new cc.p(pos2.x-3,pos2.y));
-        var pos3 = this.rock3.getPosition();
-        this.rock3.setPosition(new cc.p(pos3.x-5,pos3.y));
+    updateRock:function( rocks ){
+        rocks.forEach( function( b ) {
+            b.update();
+        }, this );
     },
     collisionRock:function(rocks , rect){
         rocks.forEach( function( b ) {

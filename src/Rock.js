@@ -16,7 +16,11 @@ var Rock = cc.Sprite.extend({
         var maxX = cc.rectGetMaxX( rect );
         var minY = cc.rectGetMinY( rect );
         var maxY = cc.rectGetMaxY( rect );
-        return ( minX <= bmaxX - 10 ) && ( bminX <= maxX - 10 ) 
-            && ( minY <= bmaxY - 10 ) && ( bminY <= maxY - 10);
+        return ( minX <= bmaxX - 20 ) && ( bminX <= maxX - 15 ) 
+            && ( minY <= bmaxY ) && ( bminY <= maxY );
+    },
+    update:function(){
+        var pos = this.getPosition();
+        this.setPosition(new cc.p( pos.x-3 , pos.y ));
     },
 });

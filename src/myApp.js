@@ -29,6 +29,10 @@ var MenuLayer = cc.Layer.extend({
         var menu = cc.Menu.create(menuItemPlay);
         menu.setPosition(cc.p(300,150));
         this.addChild(menu);
+
+        var audioEngine = cc.AudioEngine.getInstance();
+        audioEngine.preloadMusic(s_music_background);
+        audioEngine.preloadEffect(s_music_jump);
     },
 
     //this is the callback when the menu is clicked
@@ -36,7 +40,7 @@ var MenuLayer = cc.Layer.extend({
         cc.log("==onplay clicked");
         var director = cc.Director.getInstance();
         director.replaceScene(new PlayScene());
-    }
+    },
 });
 
 var MenuScene = cc.Scene.extend({

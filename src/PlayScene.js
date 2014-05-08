@@ -7,6 +7,10 @@ var PlayScene = cc.Scene.extend({
         this.addChild(this.bgLayer, 0, TagOfLayer.background);
         this.addChild(this.animLayer,0, TagOfLayer.Animation );
         this.addChild(this.statusLayer,0, TagOfLayer.Status);
+
+        var audioEngine = cc.AudioEngine.getInstance();
+        audioEngine.playMusic(s_music_background, true);
+
         this.scheduleUpdate();
     },
     gameOver:function () {
@@ -14,6 +18,8 @@ var PlayScene = cc.Scene.extend({
         this.bgLayer.unscheduleUpdate();
         this.statusLayer.unscheduleUpdate();
         this.animLayer.unscheduleUpdate();
+        var audioEngine = cc.AudioEngine.getInstance();
+        audioEngine.stopMusic();
         this.addChild(new GameOverLayer());
     },
     update:function(){
