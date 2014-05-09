@@ -1,12 +1,12 @@
-var Rock = cc.Sprite.extend({
+var Heart = cc.Sprite.extend({
     ctor: function( x1, y1 ) {
         this._super();
-        this.initWithFile( s_rock );
+        this.initWithFile( s_heart );
         this.setAnchorPoint( cc.p( 0, 0.5 ) );
         this.setPosition( cc.p( x1, y1 ) );
     },
 
-    hitRock: function( rect ) {
+    hitHeart: function( rect ) {
         var brect = this.getBoundingBoxToWorld();
         var bminX = cc.rectGetMinX( brect );
         var bmaxX = cc.rectGetMaxX( brect );
@@ -16,10 +16,10 @@ var Rock = cc.Sprite.extend({
         var maxX = cc.rectGetMaxX( rect );
         var minY = cc.rectGetMinY( rect );
         var maxY = cc.rectGetMaxY( rect );
-        return ( minX <= bmaxX - 20 ) && ( bminX <= maxX - 15 ) 
+        return ( minX <= bmaxX ) && ( bminX <= maxX ) 
             && ( minY <= bmaxY ) && ( bminY <= maxY );
     },
-    update:function(vx){
+    update:function( vx ){
         var pos = this.getPosition();
         this.setPosition(new cc.p( pos.x-vx , pos.y ));
     },

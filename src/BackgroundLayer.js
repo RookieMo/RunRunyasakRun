@@ -37,4 +37,7 @@ var BackgroundLayer = cc.Layer.extend({
         var statusLayer = this.getParent().getChildByTag(TagOfLayer.Status);
         statusLayer.updateMeter(this.meter);
     },
+    getMeter:function(){
+      return this.meter;
+    }
 });

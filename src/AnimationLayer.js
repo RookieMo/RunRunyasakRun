@@ -8,15 +8,21 @@ var AnimationLayer = cc.Layer.extend({
         this.jumpV = 20;
         this.g = -1;
         this.vy = 0;
+        this.vx = 3;
         this.jump = false;
         this.isRunning = true;
+        this.isHit = false;
         this.ground = null;
         this.isDead = false;
         this.blocks = [];
         this.rocks = [];
+        this.heart = null;
+        this.meter = 1;
         this.runningAction = this.animate();
         this.createBlocks();
         this.createRocks();
+        this.createHeart();
+
         this.player = cc.Sprite.create(s_runner0);
         this.player.setAnchorPoint(cc.p(0.5,0));
         this.player.runAction(this.runningAction);
@@ -61,11 +67,26 @@ var AnimationLayer = cc.Layer.extend({
     },
     update:function(){
         var currentPositionRect = this.getPlayerRect();
-
+        this.isHit = this.heart.hitHeart( currentPositionRect );
+            if(this.isHit){
+                this.removeAllChildren();
+                this.createBlocks();
+                this.createRocks();
+                this.createHeart();
+                this.vx+=1;
+                this.player.runAction(this.runningAction);
+                this.setBlocks( this.blocks );
+                this.addChild( this.player );  
+                this.isHit = false;      
+            }
         this.updateY();
         
         this.updateBlock(this.blocks);
         this.updateRock(this.rocks);
+        this.heart.update( this.vx );
+
+        var statusLayer = this.getParent().getChildByTag(TagOfLayer.Status);
+        statusLayer.updateMeter(this.meter);
 
         this.collisionRock(this.rocks , currentPositionRect);
 
@@ -163,26 +184,51 @@ var AnimationLayer = cc.Layer.extend({
         this.block4 = new Block( 1200, 240, 1800, 290 );
         this.blocks.push( this.block4 );
 
+        this.block5 = new Block( 2000, 290, 2600, 340 );
+        this.blocks.push( this.block5 );
+
+        this.block6 = new Block( 1800, 50, 2400, 100 );
+        this.blocks.push( this.block6 );
+
+        this.block7 = new Block( 2400, 170, 3000, 220 );
+        this.blocks.push( this.block7 );
+
+        this.block8 = new Block( 3400, 240, 4000, 290 );
+        this.blocks.push( this.block8 );
+
+        this.block9 = new Block( 3000, 330, 3600, 380 );
+        this.blocks.push( this.block9 );
+
+        this.block10 = new Block( 3600, 240, 4200, 290 );
+        this.blocks.push( this.block10 );
+
+        this.block11 = new Block( 3800, 100, 4000, 150 );
+        this.blocks.push( this.block11 );
+
+        this.block12 = new Block( 3800, 490, 4000, 540 );
+        this.blocks.push( this.block12 );
+
+        this.block13 = new Block( 4300, 240, 4900, 290 );
+        this.blocks.push( this.block13 );
+
         this.blocks.forEach( function( b ) {
             this.addChild( b );
         }, this );
     },
     updateBlock:function( blocks ){
         blocks.forEach( function( b ) {
-            b.update();
+            b.update(this.vx);
         }, this );
+        this.meter+=1;
     },
     createRocks:function(){
         this.rocks = [];
 
-        this.rock1 = new Rock( 200, 155 );
+        this.rock1 = new Rock( 500, 275 );
         this.rocks.push( this.rock1 );
 
-        this.rock2 = new Rock( 500, 275 );
+        this.rock2 = new Rock( 1300, 285 );
         this.rocks.push( this.rock2 );
-
-        this.rock3 = new Rock( 1300, 285 );
-        this.rocks.push( this.rock3 );
 
         this.rocks.forEach( function( b ) {
             this.addChild( b );
@@ -190,7 +236,7 @@ var AnimationLayer = cc.Layer.extend({
     },
     updateRock:function( rocks ){
         rocks.forEach( function( b ) {
-            b.update();
+            b.update(this.vx);
         }, this );
     },
     collisionRock:function(rocks , rect){
@@ -199,5 +245,9 @@ var AnimationLayer = cc.Layer.extend({
                 this.isDead = true;
             }
         }, this );
+    },
+    createHeart:function(){
+        this.heart = new Heart(5000 , 340);
+        this.addChild(this.heart);
     },
 });

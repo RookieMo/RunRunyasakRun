@@ -22,6 +22,7 @@
             'src/Block.js',
             'src/GameOverLayer.js',
             'src/Rock.js',
+            'src/Heart.js',
         ]
     };
 

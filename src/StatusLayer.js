@@ -1,7 +1,5 @@
 var StatusLayer = cc.Layer.extend({
-    labelCoin:null,
     labelMeter:null,
-    coins:0,
 
     ctor:function () {
         this._super();
@@ -13,10 +11,10 @@ var StatusLayer = cc.Layer.extend({
 
         var winSize = cc.Director.getInstance().getWinSize();
 
-        this.labelCoin = cc.LabelTTF.create("Coins:0", "Helvetica", 20);
+        /*this.labelCoin = cc.LabelTTF.create("Coins:0", "Helvetica", 20);
         this.labelCoin.setColor(cc.c3(0,0,0));//black color
         this.labelCoin.setPosition(cc.p(70, winSize.height - 20));
-        this.addChild(this.labelCoin);
+        this.addChild(this.labelCoin);*/
 
         this.labelMeter = cc.LabelTTF.create("0 M", "Helvetica", 20);
         this.labelMeter.setPosition(cc.p(winSize.width - 70, winSize.height - 20));
