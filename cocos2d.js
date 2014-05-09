@@ -23,6 +23,7 @@
             'src/GameOverLayer.js',
             'src/Rock.js',
             'src/Heart.js',
+            'src/Coin.js',
         ]
     };
 

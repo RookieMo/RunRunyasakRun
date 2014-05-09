@@ -33,6 +33,7 @@ var MenuLayer = cc.Layer.extend({
         var audioEngine = cc.AudioEngine.getInstance();
         audioEngine.preloadMusic(s_music_background);
         audioEngine.preloadEffect(s_music_jump);
+        audioEngine.preloadEffect(s_music_coin);
     },
 
     //this is the callback when the menu is clicked

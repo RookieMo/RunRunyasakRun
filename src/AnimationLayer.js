@@ -16,12 +16,14 @@ var AnimationLayer = cc.Layer.extend({
         this.isDead = false;
         this.blocks = [];
         this.rocks = [];
+        this.coins = [];
         this.heart = null;
         this.meter = 1;
         this.runningAction = this.animate();
         this.createBlocks();
         this.createRocks();
         this.createHeart();
+        this.creatCoin();
 
         this.player = cc.Sprite.create(s_runner0);
         this.player.setAnchorPoint(cc.p(0.5,0));
@@ -68,27 +70,31 @@ var AnimationLayer = cc.Layer.extend({
     update:function(){
         var currentPositionRect = this.getPlayerRect();
         this.isHit = this.heart.hitHeart( currentPositionRect );
-            if(this.isHit){
+        if(this.isHit){
+                this.meter += 500; 
                 this.removeAllChildren();
                 this.createBlocks();
                 this.createRocks();
                 this.createHeart();
+                this.creatCoin();
                 this.vx+=1;
                 this.player.runAction(this.runningAction);
                 this.setBlocks( this.blocks );
                 this.addChild( this.player );  
-                this.isHit = false;      
-            }
+                this.isHitH = false;      
+        }
         this.updateY();
         
         this.updateBlock(this.blocks);
         this.updateRock(this.rocks);
+        this.updateCoin(this.coins);
         this.heart.update( this.vx );
 
         var statusLayer = this.getParent().getChildByTag(TagOfLayer.Status);
         statusLayer.updateMeter(this.meter);
 
         this.collisionRock(this.rocks , currentPositionRect);
+        this.collisionCoin(this.coins , currentPositionRect);
 
         var newPositionRect = this.getPlayerRect();
         this.handleCollision( currentPositionRect,
@@ -187,7 +193,7 @@ var AnimationLayer = cc.Layer.extend({
         this.block5 = new Block( 2000, 290, 2600, 340 );
         this.blocks.push( this.block5 );
 
-        this.block6 = new Block( 1800, 50, 2400, 100 );
+        this.block6 = new Block( 1900, 50, 2400, 100 );
         this.blocks.push( this.block6 );
 
         this.block7 = new Block( 2400, 170, 3000, 220 );
@@ -199,7 +205,7 @@ var AnimationLayer = cc.Layer.extend({
         this.block9 = new Block( 3000, 330, 3600, 380 );
         this.blocks.push( this.block9 );
 
-        this.block10 = new Block( 3600, 240, 4200, 290 );
+        this.block10 = new Block( 3800, 240, 4200, 290 );
         this.blocks.push( this.block10 );
 
         this.block11 = new Block( 3800, 100, 4000, 150 );
@@ -219,16 +225,25 @@ var AnimationLayer = cc.Layer.extend({
         blocks.forEach( function( b ) {
             b.update(this.vx);
         }, this );
-        this.meter+=1;
+        this.meter+=0.1;
     },
     createRocks:function(){
         this.rocks = [];
 
-        this.rock1 = new Rock( 500, 275 );
+        this.rock1 = new Rock( 700, 275 );
         this.rocks.push( this.rock1 );
 
         this.rock2 = new Rock( 1300, 285 );
         this.rocks.push( this.rock2 );
+
+        this.rock3 = new Rock( 2500, 335 );
+        this.rocks.push( this.rock3 );
+
+        this.rock4 = new Rock( 2100, 95 );
+        this.rocks.push( this.rock4 );
+
+        this.rock5 = new Rock( 4500, 285 );
+        this.rocks.push( this.rock5 );
 
         this.rocks.forEach( function( b ) {
             this.addChild( b );
@@ -247,7 +262,45 @@ var AnimationLayer = cc.Layer.extend({
         }, this );
     },
     createHeart:function(){
-        this.heart = new Heart(5000 , 340);
+        this.heart = new Heart(5025 , 340);
         this.addChild(this.heart);
+    },
+    creatCoin:function(){
+        this.coins = [];
+
+        this.coin1 = new Coin( 2100, 360 );
+        this.coins.push( this.coin1 );
+
+        this.coin2 = new Coin( 2200, 360 );
+        this.coins.push( this.coin2 );
+
+        this.coin3 = new Coin( 2300, 360 );
+        this.coins.push( this.coin3 );
+
+        this.coin4 = new Coin( 3800, 550 );
+        this.coins.push( this.coin4 );
+
+        this.coin5 = new Coin( 3900, 550 );
+        this.coins.push( this.coin5 );
+
+        this.coins.forEach( function( b ) {
+            this.addChild( b );
+        }, this );
+    },
+    updateCoin:function( coins ){
+        coins.forEach( function( b ) {
+            b.update(this.vx);
+        }, this );
+    },
+    collisionCoin:function(coins , rect){
+        coins.forEach( function( b ) {
+            if ( b.hitCoin( rect ) ) {
+                var audioEngine = cc.AudioEngine.getInstance();
+                audioEngine.playEffect(s_music_coin);
+                this.meter+=100;
+                b.setPosition(cc.p(-100 , -100));
+                this.removeChild( b )
+            }
+        }, this );
     },
 });
